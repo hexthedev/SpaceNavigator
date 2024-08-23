@@ -12,6 +12,13 @@ using UnityEditor;
 
 namespace SpaceNavigatorDriver
 {
+    public interface ISpaceNavigatorHID
+    {
+        void SetLEDStatus(SpaceNavigatorHID.LedStatus off);
+        Vector3 Translation { get; }
+        Vector3 Rotation { get; }
+    }
+    
     struct SpaceNavigatorHIDState : IInputStateTypeInfo
     {
         public FourCC format => new FourCC('H', 'I', 'D');
@@ -55,12 +62,14 @@ namespace SpaceNavigatorDriver
     [InitializeOnLoad] // Make sure static constructor is called during startup.
 #endif
     [InputControlLayout(stateType = typeof(SpaceNavigatorHIDState))]
-    public class SpaceNavigatorHID : InputDevice, IInputStateCallbackReceiver
+    public class SpaceNavigatorHID : InputDevice, IInputStateCallbackReceiver, ISpaceNavigatorHID
     {
         public ButtonControl Button1 { get; protected set; }
         public ButtonControl Button2 { get; protected set; }
-        public Vector3Control Rotation { get; protected set; }
-        public Vector3Control Translation { get; protected set; }
+        public virtual Vector3 Rotation => RotationControl.ReadValue();
+        public Vector3Control RotationControl { get; protected set; }
+        public virtual Vector3 Translation => TranslationControl.ReadValue();
+        public Vector3Control TranslationControl { get; protected set; }
         
         static SpaceNavigatorHID()
         {
@@ -89,6 +98,7 @@ namespace SpaceNavigatorDriver
         {
         }
 
+        
         private static void Quit()
         {
             if (current != null)
@@ -104,8 +114,8 @@ namespace SpaceNavigatorDriver
             displayName = GetType().Name;
             Button1 = GetChildControl<ButtonControl>("button1");
             Button2 = GetChildControl<ButtonControl>("button2");
-            Rotation = GetChildControl<Vector3Control>("rotation");
-            Translation = GetChildControl<Vector3Control>("translation");
+            RotationControl = GetChildControl<Vector3Control>("rotation");
+            TranslationControl = GetChildControl<Vector3Control>("translation");
 
             DebugLog("SpaceNavigatorHID : FinishSetup");
         }
@@ -113,7 +123,7 @@ namespace SpaceNavigatorDriver
         // We can also expose a '.current' getter equivalent to 'Gamepad.current'.
         // Whenever our device receives input, MakeCurrent() is called. So we can
         // simply update a '.current' getter based on that.
-        public static SpaceNavigatorHID current { get; private set; }
+        public static ISpaceNavigatorHID current { get; private set; }
         public override void MakeCurrent()
         {
             base.MakeCurrent();

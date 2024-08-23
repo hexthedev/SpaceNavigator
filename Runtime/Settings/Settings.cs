@@ -184,8 +184,8 @@ namespace SpaceNavigatorDriver {
 
 			if (GUILayout.Button("Recalibrate Drift"))
 			{
-				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
-				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+				TranslationDrift = SpaceNavigatorHID.current.Translation;
+				RotationDrift = SpaceNavigatorHID.current.Rotation;
 			}
 			
 			GUILayout.EndVertical();			
@@ -220,8 +220,8 @@ namespace SpaceNavigatorDriver {
 
 			if (GUILayout.Button("Recalibrate Drift"))
 			{
-				TranslationDrift = SpaceNavigatorHID.current.Translation.ReadValue();
-				RotationDrift = SpaceNavigatorHID.current.Rotation.ReadValue();
+				TranslationDrift = SpaceNavigatorHID.current.Translation;
+				RotationDrift = SpaceNavigatorHID.current.Rotation;
 			}
 
 			GUILayout.EndVertical();

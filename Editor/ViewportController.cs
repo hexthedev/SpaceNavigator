@@ -104,8 +104,8 @@ namespace SpaceNavigatorDriver
                 StraightenHorizon();
             _wasHorizonLocked = Settings.LockHorizon;
 
-            Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation.ReadValue();
-            Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation.ReadValue();
+            Settings.TranslationDrift ??= SpaceNavigatorHID.current.Translation;
+            Settings.RotationDrift ??= SpaceNavigatorHID.current.Rotation;
             
             _diyDeltaTime = EditorApplication.timeSinceStartup - _lastRefreshTime;
             _lastRefreshTime = EditorApplication.timeSinceStartup;
@@ -341,8 +341,8 @@ namespace SpaceNavigatorDriver
         private static void ReadDeviceData2(OperationMode mode, out Vector3 translation, out Vector3 rotation)
         {
             // Read data from device
-            translation = SpaceNavigatorHID.current.Translation.ReadValue() - Settings.TranslationDrift.Value;
-            rotation = SpaceNavigatorHID.current.Rotation.ReadValue() - Settings.RotationDrift.Value;
+            translation = SpaceNavigatorHID.current.Translation - Settings.TranslationDrift.Value;
+            rotation = SpaceNavigatorHID.current.Rotation - Settings.RotationDrift.Value;
 
             // Damping
             if (Settings.PresentationMode)
